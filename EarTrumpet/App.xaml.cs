@@ -103,11 +103,12 @@ namespace EarTrumpet
             _settings.SettingsHotkeyTyped += () => _settingsWindow.OpenOrBringToFront();
             _settings.AbsoluteVolumeUpHotkeyTyped += AbsoluteVolumeIncrement;
             _settings.AbsoluteVolumeDownHotkeyTyped += AbsoluteVolumeDecrement;
+            _settings.CycleDevicesTyped += CycleDevices;
             _settings.RegisterHotkeys();
 
             _trayIcon.PrimaryInvoke += (_, type) => _flyoutViewModel.OpenFlyout(type);
             _trayIcon.SecondaryInvoke += (_, __) => _trayIcon.ShowContextMenu(GetTrayContextMenuItems());
-            _trayIcon.TertiaryInvoke += (_, __) => CollectionViewModel.Default?.ToggleMute.Execute(null);
+            _trayIcon.TertiaryInvoke += (_, __) => CycleDevices();
             _trayIcon.Scrolled += (_, wheelDelta) => CollectionViewModel.Default?.IncrementVolume(Math.Sign(wheelDelta) * 2);
             _trayIcon.SetTooltip(CollectionViewModel.GetTrayToolTip());
             _trayIcon.IsVisible = true;
@@ -277,6 +278,29 @@ namespace EarTrumpet
                 {
                     device.IsAbsMuted = true;
                 }
+            }
+        }
+
+        private void CycleDevices()
+        {
+            bool selectNext = false;
+            IEnumerable<DeviceViewModel> devices = CollectionViewModel.AllDevices.OrderBy(x => x.DisplayName).Where(d => !d.IsMuted);
+            foreach (var device in devices)
+            {
+                if (selectNext)
+                {
+                    device.MakeDefaultDevice();
+                    selectNext = false;
+                    break;
+                }
+                if(device == CollectionViewModel.Default)
+                {
+                    selectNext = true;
+                }
+            }
+            if (selectNext)
+            {
+                devices.First()?.MakeDefaultDevice();
             }
         }
     }

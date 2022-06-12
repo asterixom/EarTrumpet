@@ -14,6 +14,7 @@ namespace EarTrumpet
         public event Action SettingsHotkeyTyped;
         public event Action AbsoluteVolumeUpHotkeyTyped;
         public event Action AbsoluteVolumeDownHotkeyTyped;
+        public event Action CycleDevicesTyped;
 
         private ISettingsBag _settings = StorageFactory.GetSettings();
 
@@ -24,6 +25,7 @@ namespace EarTrumpet
             HotkeyManager.Current.Register(SettingsHotkey);
             HotkeyManager.Current.Register(AbsoluteVolumeUpHotkey);
             HotkeyManager.Current.Register(AbsoluteVolumeDownHotkey);
+            HotkeyManager.Current.Register(CycleDevicesHotkey);
 
             HotkeyManager.Current.KeyPressed += (hotkey) =>
             {
@@ -51,6 +53,11 @@ namespace EarTrumpet
                 {
                     Trace.WriteLine("AppSettings AbsoluteVolumeDownHotkeyTyped");
                     AbsoluteVolumeDownHotkeyTyped?.Invoke();
+                }
+                else if (hotkey.Equals(CycleDevicesHotkey))
+                {
+                    Trace.WriteLine("AppSettings CycleDevicesTyped");
+                    CycleDevicesTyped?.Invoke();
                 }
             };
         }
@@ -107,6 +114,17 @@ namespace EarTrumpet
                 HotkeyManager.Current.Unregister(AbsoluteVolumeDownHotkey);
                 _settings.Set("AbsoluteVolumeDownHotkey", value);
                 HotkeyManager.Current.Register(AbsoluteVolumeDownHotkey);
+            }
+        }
+
+        public HotkeyData CycleDevicesHotkey
+        {
+            get => _settings.Get("CycleDevicesHotkey", new HotkeyData { });
+            set
+            {
+                HotkeyManager.Current.Unregister(CycleDevicesHotkey);
+                _settings.Set("CycleDevicesHotkey", value);
+                HotkeyManager.Current.Register(CycleDevicesHotkey);
             }
         }
 

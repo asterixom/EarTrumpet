@@ -21,6 +21,9 @@ namespace EarTrumpet.UI.ViewModels
         public HotkeyViewModel AbsoluteVolumeDownHotkey { get; }
         public string DefaultAbsoluteVolumeDownHotkey => s_hotkeyNoneText;
 
+        public HotkeyViewModel CycleDevicesHotkey { get; }
+        public string DefaultCycleDevicesHotkey => s_hotkeyNoneText;
+
         public EarTrumpetShortcutsPageViewModel(AppSettings settings) : base(null)
         {
             Title = Properties.Resources.ShortcutsPageText;
@@ -31,6 +34,7 @@ namespace EarTrumpet.UI.ViewModels
             OpenSettingsHotkey = new HotkeyViewModel(settings.SettingsHotkey, (newHotkey) => settings.SettingsHotkey = newHotkey);
             AbsoluteVolumeUpHotkey = new HotkeyViewModel(settings.AbsoluteVolumeUpHotkey, (newHotkey) => settings.AbsoluteVolumeUpHotkey = newHotkey);
             AbsoluteVolumeDownHotkey = new HotkeyViewModel(settings.AbsoluteVolumeDownHotkey, (newHotkey) => settings.AbsoluteVolumeDownHotkey = newHotkey);
+            CycleDevicesHotkey = new HotkeyViewModel(settings.CycleDevicesHotkey, (newHotkey) => settings.CycleDevicesHotkey = newHotkey);
         }
     }
 }
